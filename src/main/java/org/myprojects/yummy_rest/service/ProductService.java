@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.myprojects.yummy_rest.dto.ProductRequest;
 import org.myprojects.yummy_rest.dto.ProductResponse;
 import org.myprojects.yummy_rest.entity.Product;
+import org.myprojects.yummy_rest.exception.ProductAlreadyExistsException;
 import org.myprojects.yummy_rest.exception.ProductNotFoundException;
 import org.myprojects.yummy_rest.mapper.ProductMapper;
 import org.myprojects.yummy_rest.repo.ProductRepo;
@@ -18,10 +19,14 @@ public class ProductService {
     private final ProductRepo repo;
     private final ProductMapper mapper;
 
-    public String createProduct(ProductRequest request) {
+    public ProductResponse createProduct(ProductRequest request) {
+        if(repo.findByName(request.name()).orElse(null) != null) {
+            throw new ProductAlreadyExistsException(format("Product with name %s already exists", request.name()));
+        }
         Product product = mapper.toProduct(request);
         repo.save(product);
-        return "Product created";
+
+        return mapper.toProductResponse(product);
     }
 
     public List<ProductResponse> getAllProducts() {
@@ -41,15 +46,21 @@ public class ProductService {
     }
 
     public String deleteProduct(Long id) {
+        if(!repo.existsById(id)) {
+            throw new ProductNotFoundException(format("No product with provided id: %d", id));
+        }
         repo.deleteById(id);
         return "Product deleted";
     }
 
-    public String updateProduct(ProductRequest request, Long id) {
+    public ProductResponse updateProduct(ProductRequest request, Long id) {
+        if(!repo.existsById(id)) {
+            throw new ProductNotFoundException(format("No product with provided id: %d", id));
+        }
         Product product = mapper.toProduct(request);
         product.setId(id);
         repo.save(product);
-        return "Product updated";
+        return mapper.toProductResponse(product);
     }
 
     public List<ProductResponse> getTopNProductsInPriceRangeXY(Long numProducts, double priceFrom, double priceTill) {
