@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
 public record CustomerUpdateRequest(
-        @NotBlank
         @JsonProperty("first_name")
         String firstName,
 

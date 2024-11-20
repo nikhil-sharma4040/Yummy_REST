@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.myprojects.yummy_rest.dto.CustomerRequest;
 import org.myprojects.yummy_rest.dto.CustomerResponse;
+import org.myprojects.yummy_rest.dto.CustomerUpdateRequest;
 import org.myprojects.yummy_rest.helper.JWTHelper;
 import org.myprojects.yummy_rest.service.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,13 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<String> createCustomer(@RequestBody @Valid CustomerRequest request) {
         return ResponseEntity.ok(customerService.createCustomer(request));
+    }
+
+    @PatchMapping
+    public ResponseEntity<String> updateCustomer(@RequestBody @Valid CustomerUpdateRequest customerUpdateRequest, HttpServletRequest request) {
+        if(!jwtHelper.validateAuthorizationHeader(request.getHeader("Authorization"))){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        return ResponseEntity.ok(customerService.updateCustomer(customerUpdateRequest, request.getHeader("Authorization")));
     }
 }
