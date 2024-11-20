@@ -16,6 +16,7 @@ public record CustomerRequest(
         @NotNull(message = "Email is required")
         @NotEmpty(message = "Email is required")
         @NotBlank(message = "Email is required")
+        @Email(message = "Email must be in correct format")
         @JsonProperty("email")
         String email,
 
