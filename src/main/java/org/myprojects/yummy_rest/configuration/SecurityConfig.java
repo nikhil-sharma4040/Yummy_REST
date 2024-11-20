@@ -12,17 +12,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig implements WebMvcConfigurer {
-    private final RequestInterceptor requestInterceptor;
+public class SecurityConfig /*implements WebMvcConfigurer*/ {
+//    private final RequestInterceptor requestInterceptor;
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(requestInterceptor)
         .addPathPatterns("/**")
         .excludePathPatterns("/api/v1/auth/**")
         .excludePathPatterns("/api/v1/customer/**")
         ;
-    }
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {

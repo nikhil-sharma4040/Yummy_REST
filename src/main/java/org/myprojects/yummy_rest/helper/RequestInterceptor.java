@@ -23,7 +23,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         String token = authorizationHeader.substring(7);
         String email = jwtHelper.extractEmail(token);
 
-        if(email == null || !jwtHelper.validateToken(token, email)) {
+        if(email == null || !jwtHelper.validateToken(token)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
